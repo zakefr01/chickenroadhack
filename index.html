@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chicken Road Predictor</title>
+  <style>
+    body {
+      background: #141414;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #ffdd57;
+    }
+    #prediction, #gameSection, #warningSection {
+      display: none;
+    }
+    button, select, input {
+      background: #ffdd57;
+      color: #141414;
+      padding: 1rem 2rem;
+      margin: 1rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover, select:hover {
+      background: #ffc107;
+    }
+    #warningText {
+      background: #ff4757;
+      color: #fff;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🐔 Chicken Road Predictor</h1>
+
+  <!-- Первый экран: ввод ID -->
+  <div id="idSection">
+    <p>Enter your Chicken Road ID:</p>
+    <input type="text" id="userId" placeholder="Enter your ID" maxlength="10"/>
+    <br/>
+    <button onclick="validateId()">Start</button>
+  </div>
+
+  <!-- Предупреждение -->
+  <div id="warningSection">
+    <div id="warningText">
+      You must create new account.<br>
+      Top up 30-40 ZAR and use my promo code <b>ZA611</b> to get bonuses.
+    </div>
+    <button onclick="window.location.href='https://affpa.top/L?tag=d_4326916m_18627c_&site=4326916&ad=18627&r=registration'">Create New Account</button>
+  </div>
+
+  <!-- Второй экран: предсказания -->
+  <div id="gameSection">
+    <select id="difficulty">
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+      <option value="hardcore">Hardcore</option>
+    </select>
+    <br/>
+    <button onclick="getPrediction()">Get Prediction</button>
+    <div id="prediction" style="margin-top:20px; font-size:2rem;">--</div>
+  </div>
+
+  <script>
+    const coefficients = {
+      easy: [1.03, 1.07, 1.12, 1.17, 1.23, 1.29, 1.36, 1.44, 1.53, 1.63, 1.75, 1.88, 2.04, 2.22, 2.45, 2.72, 3.06, 3.5, 4.08, 4.9, 6.13, 6.61, 9.81, 19.44],
+      medium: [1.12, 1.28, 1.47, 1.70, 1.98, 2.33, 2.76, 3.32, 4.03, 4.96, 6.20, 6.91, 8.90, 11.74, 15.99, 22.61, 33.58, 53.20, 92.17, 182.51, 451.71, 1788.80],
+      hard: [1.23, 1.55, 1.98, 2.56, 3.36, 4.49, 5.49, 7.53, 10.56, 15.21, 22.59, 34.79, 55.97, 94.99, 172.42, 341.40, 760.46, 2007.63, 6956.47, 41321.43],
+      hardcore: [1.63, 2.80, 4.95, 9.08, 15.21, 30.12, 62.96, 140.24, 337.19, 890.19, 2643.89, 9161.08, 39301.05, 233448.29, 2542251.93]
+    };
+
+    function validateId() {
+      const userId = document.getElementById('userId').value.trim();
+      if (userId.startsWith('12')) {
+        document.getElementById('idSection').style.display = 'none';
+        document.getElementById('gameSection').style.display = 'block';
+        document.getElementById('prediction').style.display = 'block'; // Включаем предсказания
+      } else {
+        document.getElementById('idSection').style.display = 'none';
+        document.getElementById('warningSection').style.display = 'block';
+      }
+    }
+
+    function getPrediction() {
+      const difficulty = document.getElementById('difficulty').value;
+      const coeffs = coefficients[difficulty];
+
+      let filtered = [];
+      const rand = Math.random();
+
+      if (rand < (1/7)) {
+        filtered = coeffs.filter(x => x > 8);
+      } else if (rand < (1/5)) {
+        filtered = coeffs.filter(x => x > 5);
+      } else if (rand < (1/3)) {
+        filtered = coeffs.filter(x => x > 3);
+      }
+
+      if (filtered.length === 0) {
+        filtered = coeffs.filter(x => x <= 3);
+      }
+
+      const randomCoeff = filtered[Math.floor(Math.random() * filtered.length)];
+      document.getElementById('prediction').textContent = randomCoeff.toFixed(2) + "x";
+    }
+  </script>
+</body>
+</html>
